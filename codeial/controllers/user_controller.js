@@ -4,10 +4,18 @@ module.exports.profile=function(req,res){
     return res.render('user_profile');
 }
 module.exports.signUp=function(req,res){
+   if(req.isAuthenticated()){
+      return res.redirect('/user/profile');
+   }
+
     return res.render('signUp');
 }
 
 module.exports.signIn=function(req,res){
+    if(req.isAuthenticated()){
+        return res.redirect('/user/profile');
+     }
+
     return res.render('signIn');
 }
 
@@ -23,7 +31,7 @@ module.exports.create = async function (req, res) {
         await User.create(req.body);
         return res.redirect('/user/sign-in');
       } else {
-        return res.redirect('back');
+        return res.redirect('/user/sign-in');
       }
     } catch (err) {
       console.log('Error in creating user', err);
@@ -32,5 +40,10 @@ module.exports.create = async function (req, res) {
   };
 
 module.exports.createSession=function(req,res){
-    return res.render('signIn');
+    return res.redirect('/');
+}
+
+module.exports.destroySession=function(req,res){
+    req.logout();
+    return res.redirect('/');
 }
