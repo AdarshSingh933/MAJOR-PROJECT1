@@ -39,8 +39,29 @@ module.exports.create = async function (req, res) {
     }
   };
 
-module.exports.createSession=function(req,res){
-    return res.redirect('/');
+module.exports.createSession=async function(req,res){
+    // find the user
+    try{
+       const user= await User.findOne({email:req.body.email});
+            
+             // handle user found
+             if(user){
+                // handle password which dont match
+                if(user.password!=req.body[password]){
+                    return res.redirect('back');
+                }
+                // handle session creation
+                res.cookie('user_id',user.id);
+                return res.redirect('/user/profile');
+             }else{
+              // handle user not found
+                return res.redirect('back');
+             }
+       }catch(err){
+        console.log('error in finding user in signing in');
+        return;
+    }
+   
 }
 
 module.exports.destroySession=function(req,res){
