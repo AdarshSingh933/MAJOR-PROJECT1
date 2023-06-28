@@ -11,7 +11,7 @@ const passport=require('passport');
 const passportLocal=require('./config/passport-local-strategy');
 const sassMiddleware=require('sass-middleware');
 
-console.log('mongostore',MongoStore);
+
 app.use(sassMiddleware({
     src:'./assets/scss',
     dest:'./assets/css',
