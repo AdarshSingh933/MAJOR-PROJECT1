@@ -1,7 +1,18 @@
 const User=require('../models/user');
 
-module.exports.profile=function(req,res){
-    return res.render('user_profile');
+module.exports.profile= async function(req,res){
+  try{
+    const user = await User.findOne({ email: req.user.email });
+    
+    return res.render('user_profile',{
+      user:user
+    });
+ 
+  }catch(err){
+    console.log('Error in creating user', err);
+    return ;
+  }
+    
 }
 module.exports.signUp=function(req,res){
    if(req.isAuthenticated()){
@@ -47,7 +58,7 @@ module.exports.createSession=async function(req,res){
              // handle user found
              if(user){
                 // handle password which dont match
-                if(user.password!=req.body[password]){
+                if(user.password!=req.body['password']){
                     return res.redirect('back');
                 }
                 // handle session creation
@@ -65,6 +76,11 @@ module.exports.createSession=async function(req,res){
 }
 
 module.exports.destroySession=function(req,res){
-    req.logout();
-    return res.redirect('/');
+    req.logout(function(err,logout){
+      if(err){
+        console.log(err);
+      }
+      return res.redirect('/');
+    });
+    
 }
