@@ -1,6 +1,6 @@
      <link rel="stylesheet" href="/css/home.css">
-    <h1>Codeial/<%= title %></h1>
-
+    
+  <div id="home-container">
     <section id="feed-posts">
        <h4>Posts</h4>
        <% if(locals.user) { %>
@@ -8,57 +8,27 @@
           <textarea name="content" cols="30" rows="3" placeholder="type here..." required></textarea>
           <input type="submit" value="Post">
        </form>
-       <% } %>
-       <div id="post-container">
+     <% } %>
+     <div id="post-container">
           <%  for (post of posts){ %>
-           <ul>
+          <ul>
+          <%- include('_post') -%>
+          <br>
+          </ul>
+     <% } %>
+     </div>
+     </section>
+     <section id="friends-list">
+          <h4>Friends</h4>
+          <ul>
+               <% for(u of all_users) { %>
                <li>
-                  <p>
-                    <% if(locals.user && locals.user.id==post.user.id ) { %>
-                    <small>
-                         <a href="/posts/destroy/<%= post.id %>">X</a>
-                    </small>
-                    <% } %>
-                    <%= post.content %>
-                    <br>
-                    <small>
-                    <%= post.user.name %>
-                    </small>
-                  </p>
-                    <div class="post-comment">
-                    <% if(locals.user) { %>
-                    <form action="/comments/create" method="post">
-                         <input type="text" name="content" placeholder="comment" required>
-                         <input type="hidden" name="post" value="<%= post._id %>">
-                         <input type="submit" value="Add Comment">
-                    </form>
-                    <% } %>
-               </div>
-                   <div id="post-comments-list">
-                    <ul id="post-comments-<%= post._id %>">
-                         <% for (comment of post.comments) { %>
-                            <p>
-                              <% if(locals.user && locals.user.id==comment.user.id ) { %>
-                                   <small>
-                                        <a href="/comments/destroy/<%= comment.id %>">X</a>
-                                   </small>
-                                   <% } %>
-                              <%= comment.content %>
-                              <br>
-                              <small>
-                                   <%= comment.user.name %>
-                              </small>
-                            </p>
-
-                        <% } %>
-                    </ul>
-                   </div>
+                   <a href="user/profile/<%= u.id %>"><%= u.name %></a>
                </li>
-               <br>
-           </ul>
-          <% } %>
-       </div>
-    </section>
+               <% } %>
+          </ul>
+     </section>
+</div>   
     
    
   

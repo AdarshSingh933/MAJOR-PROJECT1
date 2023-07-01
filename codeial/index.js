@@ -12,13 +12,13 @@ const passportLocal=require('./config/passport-local-strategy');
 const sassMiddleware=require('sass-middleware');
 
 
-app.use(sassMiddleware({
-    src:'./assets/scss',
-    dest:'./assets/css',
-    debug:true,
-    OutputStyle:'extended',
-    prefix:'/css'
-}));
+// app.use(sassMiddleware({
+//     src:'./assets/scss',
+//     dest:'./assets/css',
+//     debug:true,
+//     OutputStyle:'extended',
+//     prefix:'/css'
+// }));
 app.use(express.urlencoded());
 app.use(cookieParser());
 app.use(expressLayouts);

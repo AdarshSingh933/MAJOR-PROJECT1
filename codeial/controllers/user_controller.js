@@ -2,10 +2,11 @@ const User=require('../models/user');
 
 module.exports.profile= async function(req,res){
   try{
-    const user = await User.findOne({ email: req.user.email });
-    
+    // const user = await User.findOne({ email: req.user.email });
+    const user= await User.findById(req.params.id);
+    console.log("user",user);
     return res.render('user_profile',{
-      user:user
+      user_profile:user
     });
  
   }catch(err){
@@ -13,6 +14,18 @@ module.exports.profile= async function(req,res){
     return ;
   }
     
+}
+module.exports.update=async function(req,res){
+  try{
+  if(req.user.id==req.params.id){
+    await User.findByIdAndUpdate(req.params.id,req.body);
+    return res.redirect('back');
+  }else{
+    return res.status(401).send('Unauthorized');
+  }
+}catch(err){
+   console.log("Update unsuccessful");
+}
 }
 module.exports.signUp=function(req,res){
    if(req.isAuthenticated()){
@@ -84,6 +97,4 @@ module.exports.destroySession=function(req,res){
     });
     
 }
-module.exports.post=function(req,res){
-  return res.redirect('/');
-}
+
