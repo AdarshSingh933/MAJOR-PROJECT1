@@ -63,33 +63,35 @@ module.exports.create = async function (req, res) {
     }
   };
 
-module.exports.createSession=async function(req,res){
+module.exports.createSession= function(req,res){
     // find the user
-    try{
-       const user= await User.findOne({email:req.body.email});
+    // try{
+    //    const user= await User.findOne({email:req.body.email});
             
-             // handle user found
-             if(user){
-                // handle password which dont match
-                if(user.password!=req.body['password']){
-                    return res.redirect('back');
-                }
-                // handle session creation
-                res.cookie('user_id',user.id);
-                return res.redirect('/user/profile');
-             }else{
-              // handle user not found
-                return res.redirect('back');
-             }
-       }catch(err){
-        console.log('error in finding user in signing in');
-        return;
-    }
-   
+    //          // handle user found
+    //          if(user){
+    //             // handle password which dont match
+    //             if(user.password!=req.body['password']){
+    //                 return res.redirect('back');
+    //             }
+    //             // handle session creation
+    //             res.cookie('user_id',user.id);
+    //             return res.redirect('/user/profile');
+    //          }else{
+    //           // handle user not found
+    //             return res.redirect('back');
+    //          }
+    //    }catch(err){
+    //     console.log('error in finding user in signing in');
+    //     return;
+    // }
+    req.flash('success','Logged is successfully');
+   return res.redirect('/');
 }
 
 module.exports.destroySession=function(req,res){
     req.logout(function(err,logout){
+      req.flash('success','Logged out successfully');
       if(err){
         console.log(err);
       }
