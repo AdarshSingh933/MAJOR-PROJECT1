@@ -29,7 +29,7 @@ module.exports.update=async function(req,res){
 }
 module.exports.signUp=function(req,res){
    if(req.isAuthenticated()){
-      return res.redirect('/user/profile');
+      return res.redirect('/');
    }
 
     return res.render('signUp');
@@ -37,7 +37,7 @@ module.exports.signUp=function(req,res){
 
 module.exports.signIn=function(req,res){
     if(req.isAuthenticated()){
-        return res.redirect('/user/profile');
+        return res.redirect('/');
      }
 
     return res.render('signIn');
@@ -63,30 +63,29 @@ module.exports.create = async function (req, res) {
     }
   };
 
-module.exports.createSession= function(req,res){
+module.exports.createSession=async function(req,res){
     // find the user
-    // try{
-    //    const user= await User.findOne({email:req.body.email});
+    try{
+       const user= await User.findOne({email:req.body.email});
             
-    //          // handle user found
-    //          if(user){
-    //             // handle password which dont match
-    //             if(user.password!=req.body['password']){
-    //                 return res.redirect('back');
-    //             }
-    //             // handle session creation
-    //             res.cookie('user_id',user.id);
-    //             return res.redirect('/user/profile');
-    //          }else{
-    //           // handle user not found
-    //             return res.redirect('back');
-    //          }
-    //    }catch(err){
-    //     console.log('error in finding user in signing in');
-    //     return;
-    // }
-    req.flash('success','Logged is successfully');
-   return res.redirect('/');
+             // handle user found
+             if(user){
+                // handle password which dont match
+                if(user.password!== req.body['password']){
+                    return res.redirect('/');
+                }
+                // handle session creation
+                req.flash('success','Logged is successfully');
+                res.cookie('user_id',user.id);
+                return res.redirect('/');
+             }else{
+              // handle user not found
+                return res.redirect('/');
+             }
+       }catch(err){
+        console.log('error in finding user in signing in');
+        return;
+    }
 }
 
 module.exports.destroySession=function(req,res){

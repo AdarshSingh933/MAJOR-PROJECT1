@@ -3,22 +3,29 @@ const LocalStrategy=require('passport-local').Strategy;
 const User=require('../models/user');
 
 
-passport.use(new LocalStrategy({
-    usernameField:'email'
-   },
-    async function(email,password,done){
+passport.use(new LocalStrategy(
+  {
+    usernameField: 'email',
+    passReqToCallback: true
+  },
+  async function(req, email, password, done) {
     try {
-        const user = await User.findOne({ email: email });
-        if (!user || user.password !== password) {
-          console.log('Invalid Username/Password');
-          return done(null, false);
-        }
-        return done(null, user);
-      } catch (err) {
-        console.log('Error in finding user --> passport');
-        return done(err);
+      const user = await User.findOne({ email: email });
+      console.log('user',user);
+      if (!user || user.password !== password) {
+        req.flash('error', 'Invalid Username/Password');
+        console.log('Invalid Username/Password');
+        return done(null, false); // Authentication failed
       }
+      req.flash('success', 'User logged in successfully');
+      console.log('User logged in successfully');
+      return done(null, user); // Authentication succeeded
+    } catch (err) {
+      console.log('Error in finding user --> passport');
+      req.flash('error', err);
+      return done(err);
     }
+  }
 ));
 // serializing the user to decide which key is to be kept in the cookies
   passport.serializeUser(function(user,done){
@@ -55,7 +62,7 @@ passport.checkAuthentication=function(req,res,next){
         return next();
     }
 // if user is not signed in
-   return res.redirect('/user/signIn');
+   return res.redirect('/user/sign-in');
 }
 
 passport.setAuthenticatedUser=function(req,res,next){
